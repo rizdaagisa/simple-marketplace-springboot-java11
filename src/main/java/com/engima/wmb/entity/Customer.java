@@ -1,11 +1,23 @@
 package com.engima.wmb.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "m_customer")
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Customer {
 
     @Id
@@ -13,63 +25,22 @@ public class Customer {
     @GeneratedValue(generator = "uuid")
     private String id;
 
-    @Column
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column
+    @Column(name = "phone_number", nullable = false)
     private String mobilePhone;
 
-    @Column
-    private String email;
+    @Column(name = "is_member")
+    private Boolean isMember = false;
 
-    @Column
-    private Boolean isMember;
+    @OneToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "user_credential_id" , foreignKey= @ForeignKey(name = "Fk_user_credential"))
+    @JsonManagedReference
+    private UserCredential userCredential = null;
 
-    public String getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Transaction> transactions;
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getNam() {
-        return name;
-    }
-
-    public void setNa(String name) {
-        this.name = name;
-    }
-
-    public String getMobilePhone() {
-        return mobilePhone;
-    }
-
-    public void setMobilePhone(String mobilePhone) {
-        this.mobilePhone = mobilePhone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Boolean getMember() {
-        return isMember;
-    }
-
-    public void setMember(Boolean member) {
-        isMember = member;
-    }
 }
