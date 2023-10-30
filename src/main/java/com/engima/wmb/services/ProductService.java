@@ -3,19 +3,17 @@ package com.engima.wmb.services;
 import com.engima.wmb.entity.Product;
 import com.engima.wmb.entity.Store;
 import com.engima.wmb.entity.TransactionDetail;
+import com.engima.wmb.model.request.product.ProductRequest;
 import com.engima.wmb.model.response.DataResponse;
 import com.engima.wmb.repository.ProductRepository;
 import com.engima.wmb.repository.StoreRepository;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,11 +40,18 @@ public class ProductService {
     }
 
     @Transactional
-    public Object saveProduct(Product product){ // SAVE product
-        Optional<Store> storeFind = storeRepository.findById(product.getStore().getId());
+    public Object saveProduct(ProductRequest productRequest){ // SAVE product
+        Optional<Store> storeFind = storeRepository.findById(productRequest.getStore_id());
         if(storeFind.isPresent()){
 
-            Store store = storeFind.get();
+            Product product = Product.builder()
+                    .name(productRequest.getName())
+                    .description(productRequest.getDescription())
+                    .price(productRequest.getPrice())
+                    .stock(productRequest.getStock())
+                    .build();
+
+            Store store = storeFind.get(); // get store data
             // Set the product's store
             product.setStore(store);
 
@@ -57,11 +62,12 @@ public class ProductService {
             List<Product> productList = store.getProducts();
             productList.add(product);
             store.setProducts(productList);
+            storeRepository.save(store);
 
-            productRepository.save(product);
             return DataResponse.builder().status(200).message("OK").build();
+
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Data Store tidak ditemukan with ID : " + product.getStore().getId());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Data Store tidak ditemukan with ID : " + productRequest.getStore_id());
         }
     }
 

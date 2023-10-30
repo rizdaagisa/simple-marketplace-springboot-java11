@@ -1,4 +1,4 @@
-package com.engima.wmb.model.response;
+package com.engima.wmb.model.response.customer;
 
 public class UserCredentialResponse {
     private String id;

@@ -1,4 +1,4 @@
-package com.engima.wmb.model.response;
+package com.engima.wmb.model.response.customer;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

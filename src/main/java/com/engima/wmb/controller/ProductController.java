@@ -1,7 +1,6 @@
 package com.engima.wmb.controller;
 
-import com.engima.wmb.entity.Product;
-import com.engima.wmb.model.response.DataResponse;
+import com.engima.wmb.model.request.product.ProductRequest;
 import com.engima.wmb.services.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +20,12 @@ public class ProductController {
     }
 
     @PostMapping("/product") // SAVE
-    public Object saveProduct(@RequestBody Product product){
+    public Object saveProduct(@RequestBody ProductRequest product){
         return productService.saveProduct(product);
     }
 
     @PutMapping("/product") // UPDATE
-    public Object updateProduct(@RequestBody Product product){
+    public Object updateProduct(@RequestBody ProductRequest product){
         return productService.saveProduct(product);
     }
 
